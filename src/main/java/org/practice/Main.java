@@ -1,107 +1,170 @@
 package org.practice;
-
-import javax.swing.text.html.HTMLDocument;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Main {
   public static void main(String[] args) {
-    int[] unsortedNumbers = {1,2,3,4,5,6,7,8,9,10,11,12};
+    int[] numbersSet1 = {1,2,3,4,5,6,7,8,9,10,11,12};
+    int[] numbersSet2 = {2,300,11,5,6,82,322,42,5,90};
 
-    binarySearchIterative(unsortedNumbers, 3, 1, 7);
-    int value = binarySearchRecursive(unsortedNumbers, 2, 0, 12);
-    System.out.println("value from binary search recursive: " + value);
+    quickSort(numbersSet2, 0, numbersSet2.length - 1);
+    printArray(numbersSet2);
+
   }
 
-  // bubble sort implementation
-  static void bubbleSort(int[] array) {
-    int size = array.length; // 5
+  // Linear Search. This algorithm is about looking for each cell in the array until it finds the element
+  static int linearSearchAlgorithm(int array[], int x) {
 
-    // loop to get access to each element in the array
-    for(int i = 0; i < size - 1; i++) {
-      // loop to first, iterate each element and make comparisons about the stored elements
-      for(int p = 0; p < size - i - 1; p++) {
-        // At this point, is time to carry out the comparisons between elements
-        if(array[p] > array[p + 1]) {
-          int currentPosition = array[p];
-          array[p] = array[p + 1];
-          array[p + 1] = currentPosition;
+    int n = array.length;
+
+    // Passing through each element in the array
+    for(int i = 0; i < n; i++) {
+      if(array[i] == x) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  // Selection sort
+  static int[] selectionSortAlgorithm(int array[]) {
+
+    int size = array.length;
+
+    for(int step = 0; step < size - 1; step++) {
+      int min_index = step;
+
+      for(int i = step + 1; i < size; i++) {
+        // If we want to sort the give array in descending order, we have to invert the symbol from > to <.
+        // Keep in mind that i at this point is pointing to the left value
+        if(array[i] < array[min_index]) {
+          min_index = i;
         }
-
       }
-
+      // Now is time to put the min index value in the correct position
+      int temp = array[step];
+      array[step] = array[min_index];
+      array[min_index] = temp;
     }
-
-    System.out.println("Sorted by bubble sort algorithm" + Arrays.toString(array));
+    return array;
   }
 
-  // Insertion sort
-  static void insertionSort(int array[]) {
-    int arraySize = array.length;
+  // * Merge sort. Being careful when implementing this is fundamental, because this sorting algorithm requires two blocks of code in performing the needed process.
 
-    // index 1 because it is supposed index 0 is already sorted.
-    for(int i = 1; i < arraySize; i++) {
-      int key = array[i];
-      int leftValue = i - 1;
+  static void merge(int[] arr, int l, int m, int r) {
+    // create L <- A[p..q] and M <- A[q+1..r]. At this point, we are creating a copy of the sub arrays, actually.
+    int n1 = m - l + 1;
+    int n2 = r - m;
 
-      while(leftValue >= 0 && key < array[leftValue]) {
-        array[leftValue + 1] = array[leftValue];
-        --leftValue;
-      }
+    int L[] = new int[n1];
+    int M[] = new int[n2];
 
-      // Place key at after the elements just smaller than that
-      array[leftValue  + 1] = key;
+    for(int i = 0; i < n1; i++) {
+      L[i] = arr[l + i];
     }
-    System.out.println("Sorted array from insertion sort: " + Arrays.toString(array));
-  }
 
-  // Binary search(there are two types of methods to perform this algorithm) iterative and recursive
-  // Binary search(iterative method)
-  static int binarySearchIterative(int array[], int x, int lowest, int highest) {
-    while(lowest <= highest) {
-      int mid = lowest + (highest - lowest) / 2;
+    for(int j = 0; j < n2; j++) {
+      M[j] = arr[m + 1 + j];
+    }
 
-      if(array[mid] == x) {
-        return mid;
-      }
+    // maintain current index of sub array and main array. This means the first index on each sub array
+    int i, j, k;
+    i = 0;
+    j = 0;
+    k = l;
 
-      if(array[mid] < x) {
-        lowest = mid + 1;
+    // Merge the elements of L and M back into the original array
+    while (i < n1 && j < n2) {
+      // Comparing elements of L and M and place the smaller into array
+      if(L[i] <= M[j]) {
+        arr[k] = L[i];
+        i++;
       } else {
-        highest = mid - 1;
+        arr[k] = M[j];
+        j++;
       }
-
-    }
-    return -1;
-  }
-
-  // Binary search(recursive method)
-  static int binarySearchRecursive(int array[], int x, int low, int high) {
-
-    // x is the number we're looking for
-    if(high >= low) {
-
-      // Provide the center of the array
-      int mid = low + (high - low) / 2;
-
-      // If we found the value at the center, we have to return it
-      if(array[mid] == x) {
-        return mid;
-      }
-
-      // Search the left half
-      if(array[mid] >= x) {
-        return binarySearchRecursive(array, x, low, mid - 1);
-      }
-
-      // Search the right half
-      return binarySearchRecursive(array, x, mid + 1, high);
-
-      // we do not have to forget this is a recursive operation. Keeping it in mind is fundamental to understand the why of its behavior.
+      k++; // This helps us to move to the next position in the array
     }
 
-    return -1;
+    // Copy remain elements from L and M into arr
+    while( i < n1) {
+      arr[k] = L[i];
+      i++;
+      k++;
+    }
+
+    while (j < n2) {
+      arr[k] = M[j];
+      j++;
+      k++;
+    }
 
   }
+
+  // Divide the array into two sub arrays
+  static void mergeSortAlgorithm(int arr[], int l, int r) {
+
+    if(l < r) {
+      // this variable is the point at the center of the array, this is the point will split the array into two halves
+      int m = (l + r) / 2;
+
+      // recursion
+      mergeSortAlgorithm(arr, l, m);
+      mergeSortAlgorithm(arr, m + 1, r);
+
+      // merge the sorted sub arrays
+      merge(arr, l, m, r);
+
+    }
+  }
+
+  // print array
+  static void printArray(int array[]) {
+    int n = array.length;
+    for(int i = 0; i < n; i++) {
+      System.out.println("This is the number: " + array[i]);
+    }
+  }
+  private static int partition(int array[], int low, int high) {
+    int pivot = array[high];
+
+    // pointer for greater elements
+    int i = (low - 1);
+
+    //  This variable, "j", is for traversing through all elements stored at the array
+    for(int j = low; j < high; j++) {
+      if(array[j] <= pivot) {
+        // If the current element is smaller than pivot, is time to increase the variable i in moving one index to right. If smaller element than pivot is found, swap it with the greater element.
+        i++;
+        // swapping the pivot element with the greater specified by i
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+
+      }
+    }
+    // swap bigger element specified by i with the pivot
+    int temp = array[i + 1];
+    array[i + 1] = array[high];
+    array[high] = temp;
+
+    // Time to return the position from where partition is done
+    return (i + 1);
+  }
+
+  // Quicksort
+  static void quickSort(int array[], int low, int high) {
+    if(low < high){
+      // Smaller elements than pivots must be placed at the left of the array and bigger elements must be placed at the right
+      int pi = partition(array, low, high);
+
+      // Recursive call on the left of pivot
+      quickSort(array, low, pi - 1);
+
+      // Recursive call on the right of pivot
+      quickSort(array, pi + 1, high);
+
+    }
+  }
+
 
 }
