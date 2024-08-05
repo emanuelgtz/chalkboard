@@ -1,4 +1,4 @@
-package org.chalkboard.persistence.entity;
+package org.chalkboard.enums;
 
 public enum RoleEnum {
   ADMIN,

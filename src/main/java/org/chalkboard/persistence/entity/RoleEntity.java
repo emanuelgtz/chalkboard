@@ -2,6 +2,7 @@ package org.chalkboard.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.chalkboard.enums.RoleEnum;
 
 import java.util.HashSet;
 import java.util.Set;
