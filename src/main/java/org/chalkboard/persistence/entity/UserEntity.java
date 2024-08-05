@@ -22,16 +22,16 @@ public class UserEntity {
   private int userid;
 
   @Column(unique = true)
-  private String useremail;
+  private String email;
 
   @Column(name = "user_name")
-  private String username;
+  private String name;
 
   @Column(name = "user_age")
-  private int userage;
+  private int age;
 
   @Column(name = "password")
-  private String userpassword;
+  private String password;
 
   // Mandatory properties
   @Column(name = "is_enabled")
@@ -43,7 +43,7 @@ public class UserEntity {
   @Column(name = "account_No_Locked")
   private boolean accountNoLocked;
 
-  @Column(name ="credential_No_Expired")
+  @Column(name = "credential_No_Expired")
   private boolean credentialNoExpired;
 
   // Unidirectional relationship
