@@ -25,7 +25,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) {
 
     UserEntity userEntity = userEntityRepository
-            .findUserEntityByUseremail(username)
+            .findUserEntityByemail(username)
             .orElseThrow(() ->
 
                     new UsernameNotFoundException("The user requested does not exist")
